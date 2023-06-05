@@ -24,8 +24,10 @@ public class EmployerController {
 //This method should use the template employers/index.
 //To figure out the name of the model attribute you should use to pass employers into the view,
 //review this template.
-    @RequestMapping("")   //@ModelAttribute  //@GetMapping  //???
-    public String displayEmployerIndex(Model model) {
+
+    @GetMapping("")  //@RequestMapping("") //@ModelAttribute
+    public String index(Model model) {
+        //model.addAttribute("title", "All Employers");
         model.addAttribute("employers", employerRepository.findAll());
         return "employers/index";
     }
@@ -45,6 +47,7 @@ public class EmployerController {
                                     Errors errors, Model model) {
 
         if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Employers");
             return "employers/add";
         }
 
