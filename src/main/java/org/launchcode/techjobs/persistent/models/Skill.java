@@ -1,6 +1,7 @@
 package org.launchcode.techjobs.persistent.models;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Size;
 @Entity
 public class Skill extends AbstractEntity {
 
+    @NotBlank(message = "a DESCRIPTION is required")
     @Size(max = 300, message = "the SKILL description must be < 300 characters in length")
     private String description; //Some hiring managers like to have more information available
                                 //about the nature of a given programming language or framework

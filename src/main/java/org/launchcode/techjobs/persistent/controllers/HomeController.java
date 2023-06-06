@@ -1,5 +1,8 @@
 package org.launchcode.techjobs.persistent.controllers;
 
+import org.apache.catalina.Store;
+import org.launchcode.techjobs.persistent.models.data.JobRepository;
+import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
 import org.launchcode.techjobs.persistent.models.Skill;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by LaunchCode
@@ -27,16 +31,18 @@ import java.util.List;
 //Checkout templates/add.html. Make a mental note of the name of the variable
 //being used to pass the selected employer id on form submission.
 
-//In processAddJobForm, add code inside of this method to select the employer object that has been chosen
-//to be affiliated with the new job.
-//You will need to select the employer using the request parameter you’ve added to the method.
-
 @Controller
 public class HomeController {
 
 //Add a field employerRepository annotated with @Autowired.
     @Autowired
     private EmployerRepository employerRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
 
     @RequestMapping("")
     public String index(Model model) {   //indexMethod
@@ -49,19 +55,49 @@ public class HomeController {
         model.addAttribute("title", "Add Job");
         model.addAttribute(new Job());
         model.addAttribute("employers", employerRepository.findAll());
+        model.addAttribute("skills", skillRepository.findAll());
         return "add";
     }
 
+//In processAddJobForm, add code inside of this method to select the employer object that has been chosen
+//to be affiliated with the new job.
+//You will need to select the employer using the request parameter you’ve added to the method.
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                        Errors errors, Model model, @RequestParam int employerId, @RequestParam List<Integer> skills) {
+                                    Errors errors, Model model, @RequestParam int employerId,
+                                    @RequestParam List<Integer> skills) {
 
-        if (errors.hasErrors()) {
+        Optional<Employer> optionalEmployer = employerRepository.findById(employerId);
+        List<Skill> skillsObject = (List<Skill>)skillRepository.findAllById(skills);
+        newJob.setSkills(skillsObject);
+
+        if (errors.hasErrors() || optionalEmployer.isEmpty()) {
             model.addAttribute("title", "Add Job");
             return "add";
         }
-            return "redirect:";
-        }
+
+        newJob.setEmployer(optionalEmployer.get());
+        model.addAttribute("job", newJob);
+        jobRepository.save(newJob);
+
+        return "redirect:";
+    }
+
+
+//@OneToMany(mappedBy = "eventCategory")
+//private final List<Event> events = new ArrayList<>();
+
+//        List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+//        newJob.setSkills(skillObjs);
+//        Optional<Employer> optEmployer = employerRepository.findById(employerId);
+//        if(optEmployer.isEmpty()){
+//            return "add";
+//        }
+//        newJob.setEmployer(optEmployer.get());
+//        jobRepository.save(newJob);
+
+
+
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
