@@ -68,8 +68,8 @@ public class HomeController {
                                     @RequestParam List<Integer> skills) {
 
         Optional<Employer> optionalEmployer = employerRepository.findById(employerId);
-        List<Skill> skillsObject = (List<Skill>)skillRepository.findAllById(skills);
-        newJob.setSkills(skillsObject);
+        List<Skill> skillObjects = (List<Skill>)skillRepository.findAllById(skills); //skillObjs --> skillObjects
+        newJob.setSkills(skillObjects);
 
         if (errors.hasErrors() || optionalEmployer.isEmpty()) {
             model.addAttribute("title", "Add Job");
@@ -83,26 +83,17 @@ public class HomeController {
         return "redirect:";
     }
 
-
-//@OneToMany(mappedBy = "eventCategory")
-//private final List<Event> events = new ArrayList<>();
-
-//        List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-//        newJob.setSkills(skillObjs);
-//        Optional<Employer> optEmployer = employerRepository.findById(employerId);
-//        if(optEmployer.isEmpty()){
-//            return "add";
-//        }
-//        newJob.setEmployer(optEmployer.get());
-//        jobRepository.save(newJob);
-
-
-
-
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
 
-        return "view";
+        Optional<Job> optionalJob = jobRepository.findById(jobId);
+        if (optionalJob.isEmpty()) {
+            return "redirect";
+        } else {
+            //Job job = optionalJob.get();
+            model.addAttribute("job", optionalJob.get());  //("job", job)
+            return "view";
+        }
     }
 
 
