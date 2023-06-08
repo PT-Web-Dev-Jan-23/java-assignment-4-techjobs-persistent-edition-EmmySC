@@ -47,6 +47,8 @@ public class HomeController {
     @RequestMapping("")
     public String index(Model model) {   //indexMethod
         model.addAttribute("title", "My Jobs");
+// List jobs = (List<Job>) jobRepository.findAll();
+//model.addAttribute(attributeName:"jobs", job);
         return "index";
     }
 
@@ -62,6 +64,8 @@ public class HomeController {
 //In processAddJobForm, add code inside of this method to select the employer object that has been chosen
 //to be affiliated with the new job.
 //You will need to select the employer using the request parameter you’ve added to the method.
+
+
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
                                     Errors errors, Model model, @RequestParam int employerId,
