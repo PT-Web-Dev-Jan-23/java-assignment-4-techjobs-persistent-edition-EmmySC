@@ -20,7 +20,7 @@ public class Job extends AbstractEntity {
 //Update your Job model class to fit its many-to-many relationship with skills.
 //Job.skills already exists. What needs to change and/or be added to map this relationship?
 //Tip: Be sure to check the whole class for any necessary type updates.
-    @NotBlank(message = "please select at least one SKILL")  //needed?
+    //@NotBlank(message = "please select at least one SKILL")  //NOT CORRECT, can only use with STRING, not LIST!
     @ManyToMany
     private List<Skill> skills = new ArrayList<>();
 

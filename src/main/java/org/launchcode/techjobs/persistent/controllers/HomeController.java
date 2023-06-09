@@ -77,6 +77,7 @@ public class HomeController {
 
         if (errors.hasErrors() || optionalEmployer.isEmpty()) {
             model.addAttribute("title", "Add Job");
+
             return "add";
         }
 
@@ -85,6 +86,7 @@ public class HomeController {
         jobRepository.save(newJob);
 
         return "redirect:";
+
     }
 
     @GetMapping("view/{jobId}")
